@@ -1,0 +1,3 @@
+1. Use inline for simple functions (get/set);
+2. For struct/class members, take data alignment into consideration, order members decently to have less memory footprint;
+3. ...
