@@ -1,0 +1,71 @@
+http://www.drdobbs.com/the-new-c-x-macros/184401387
+
+#include <stdio.h>
+#include <stdint.h>
+
+#define ENUM_STATE \
+	X(STATE0, 1 << 0) \
+	X(STATE1, 1 << 1) \
+	X(STATE2, 1 << 2) \
+	X(STATE3, 1 << 3) \
+	X(STATE4, 1 << 4) \
+	X(STATE5, 1 << 5) \
+	X(STATE6, 1 << 6) \
+
+#define X(a, b) a = (b),
+typedef enum state_e {
+	ENUM_STATE
+	LAST
+} state_t; 
+#undef X
+
+#define X(a, b)	case a: return #a; 
+char* getState(const state_t s)
+{
+	switch (s)
+	{
+		ENUM_STATE
+		default: return "INVALID_STATE";
+	}
+}
+#undef X
+
+#define X(a, b) + 1
+uint32_t getStateNumber()
+{
+	return ENUM_STATE;	
+}
+#undef X
+
+#define GET_ENUM_NUMBER_( \
+e00, e01, e02, e03, e04, e05, e06, e07, \
+e08, e09, e10, e11, e12, e13, e14, e15, \
+e16, e17, e18, e19, e20, e21, e22, e23, \
+e24, e25, e26, e27, e28, e29, e30, e31, \
+size, ...) (size)
+#define GET_ENUM_NUMBER(...) GET_ENUM_NUMBER_(32, ##__VA_ARGS__, \
+    31, 30, 29, 28, 27, 26, 25, \
+24, 23, 22, 21, 20, 19, 18, 17, \
+16, 15, 14, 13, 12, 11, 10,  9, \
+ 8,  7,  6,  5,  4,  3,  2,  1, \
+ 0)
+
+#define X(a, b) a,
+#define GET_STATE_NUMBER(...) (GET_ENUM_NUMBER(__VA_ARGS__) - 1)
+uint32_t getStateNumber2()
+{
+	return GET_STATE_NUMBER(ENUM_STATE);
+}
+#undef X
+
+
+int main()
+{
+	printf("getStateNumber() = %d\n", getStateNumber());
+	printf("getState(STATE5) = %s\n", getState(STATE5));
+	printf("getState(10) = %s\n", getState(10));
+
+	printf("getStateNumber2() = %d\n", getStateNumber2());
+
+	return 0;
+}
