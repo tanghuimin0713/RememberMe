@@ -58,7 +58,6 @@ uint32_t getStateNumber2()
 }
 #undef X
 
-
 int main()
 {
 	printf("getStateNumber() = %d\n", getStateNumber());
